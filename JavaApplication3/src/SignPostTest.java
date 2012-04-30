@@ -31,6 +31,7 @@ private static final Logger log = Logger.getLogger(SignPostTest.class);
 
 protected static String yahooServer = "http://yboss.yahooapis.com/ysearch/";
 
+
 // Please provide your consumer key here
 private static String consumer_key = "dj0yJmk9RFFwYVpaeXJwa29IJmQ9WVdrOU4zWkROa3haTXpBbWNHbzlNVGM1TURBeU1EazJNZy0tJnM9Y29uc3VtZXJzZWNyZXQmeD0xOA--";
 
@@ -48,6 +49,13 @@ private static final String callType = "web";
 
 private static final int HTTP_STATUS_OK = 200;
 
+   private static  String replaceurl(String content) {
+        
+   content= content.replace("/","%2F");
+   content = content.replace(":", "%3A");
+   return content;
+    }
+
 /**
  * 
  * @return
@@ -61,9 +69,9 @@ if(this.isConsumerKeyExists() && this.isConsumerSecretExists()) {
 
 // Start with call Type
 String params = callType;
-
+//String params = "";
 // Add query
-params = params.concat("?q=" + query+"&start=0&count=10&sites=facebook.com");
+params = params.concat("?q=" + query+"&count=10&sites=facebook.com%2Ctwitter.com");
 
 System.out.println(params);
 // Encode Query string before concatenating
@@ -80,6 +88,8 @@ httpRequest.setOAuthConsumer(consumer);
 
 try {
     log.info("sending get request to" + URLDecoder.decode(url, ENCODE_FORMAT));
+   // System.out.println("new url = "+url);
+    
     int responseCode = httpRequest.sendGetRequest(url); 
     
     // Send the request
@@ -142,7 +152,10 @@ try {
       BufferedReader in = new BufferedReader(new FileReader("infile.txt"));
       
       while((content = in.readLine())!= null){
-          content= content.replace(" ","%20");
+          content=replaceurl(content);
+         // content= content.replace("/","%2F");
+          //
+          
                   
           System.out.println(content);
           SignPostTest signPostTest = new SignPostTest();
